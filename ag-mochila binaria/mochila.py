@@ -31,9 +31,9 @@ def fitness(individuo,carga_mochila):
         # print('nao estourou',carga,'fit',prioridade_cont)
         return prioridade_cont
 
-carga_mochila = 100
+carga_mochila = 80
 
-novoag = AG(100, 8)
+novoag = AG(200, 8)
 
 melhores = []
 while novoag.geracao <= 2000:
@@ -55,4 +55,8 @@ ax = plt.axes()
 
 print 'resposta : \n'
 print 'itens: ',novoag.melhor[0]
+for i,j in enumerate(novoag.melhor[0]):
+    if j == 1:
+        print i,
+print '\n'
 print 'fit:',novoag.melhor[1]

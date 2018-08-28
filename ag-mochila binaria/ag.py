@@ -32,6 +32,8 @@ class AG:
                 # print pais[1]
 
         self.cruzar(pais_selecionados)
+        # self.cruzar_ponto_aleatorio(pais_selecionados)
+
 
 
     def cruzar(self, pais_selecionados):
@@ -55,6 +57,32 @@ class AG:
 
         self.populacao = nova_populacao[:]
         self.mutar()
+
+    def cruzar_ponto_aleatorio(self, pais_selecionados):
+        #print self.geracao
+        nova_populacao = []
+
+        nova_populacao.append(self.melhor)
+
+        for i in range(self.tam_populacao - 1):
+            pai1 = random.choice(pais_selecionados)[0]
+            pai2 = random.choice(pais_selecionados)[0]
+
+            slicer = random.randint(1,len(pai1)-1)
+
+            filho1 = pai1[:slicer] + pai2[(len(pai1)-slicer):]
+            filho1 = [filho1,0.0]
+
+            filho2 = pai2[:(len(pai1)-slicer)] + pai1[slicer:]
+            filho2 = [filho2,0.0]
+
+            nova_populacao.append(filho1)
+            nova_populacao.append(filho2)
+
+        self.populacao = nova_populacao[:]
+        self.mutar()
+
+
 
     def mutar(self):
         self.geracao += 1
