@@ -31,7 +31,7 @@ def fitness(individuo,carga_mochila):
         # print('nao estourou',carga,'fit',prioridade_cont)
         return prioridade_cont
 
-carga_mochila = 80
+carga_mochila = 100
 
 novoag = AG(200, 8)
 
@@ -53,8 +53,7 @@ plt.style.use('seaborn-whitegrid')
 fig = plt.figure()
 ax = plt.axes()
 
-print 'resposta : \n'
-print 'itens: ',novoag.melhor[0]
+print 'itens: ',novoag.melhor[0],' - > ',
 for i,j in enumerate(novoag.melhor[0]):
     if j == 1:
         print i,

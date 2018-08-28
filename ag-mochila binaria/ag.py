@@ -31,8 +31,8 @@ class AG:
                 pais_selecionados.append(pais[1])
                 # print pais[1]
 
-        self.cruzar(pais_selecionados)
-        # self.cruzar_ponto_aleatorio(pais_selecionados)
+        # self.cruzar(pais_selecionados)
+        self.cruzar_ponto_aleatorio(pais_selecionados)
 
 
 
@@ -68,12 +68,12 @@ class AG:
             pai1 = random.choice(pais_selecionados)[0]
             pai2 = random.choice(pais_selecionados)[0]
 
-            slicer = random.randint(1,len(pai1)-1)
+            slicer = random.randint(1,self.tam_gene-1)
 
-            filho1 = pai1[:slicer] + pai2[(len(pai1)-slicer):]
+            filho1 = pai1[:slicer] + pai2[slicer:]
             filho1 = [filho1,0.0]
 
-            filho2 = pai2[:(len(pai1)-slicer)] + pai1[slicer:]
+            filho2 = pai2[:slicer] + pai1[slicer:]
             filho2 = [filho2,0.0]
 
             nova_populacao.append(filho1)
