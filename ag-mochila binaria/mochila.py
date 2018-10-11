@@ -33,7 +33,7 @@ def fitness(individuo,carga_mochila):
 
 carga_mochila = 100
 
-novoag = AG(200, 8)
+novoag = AG(50, 8)
 
 melhores = []
 while novoag.geracao <= 2000:
