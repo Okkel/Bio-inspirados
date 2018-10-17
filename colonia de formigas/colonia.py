@@ -1,5 +1,7 @@
 from igraph import *
 import random
+import matplotlib.pyplot as plt
+
 
 
 g = Graph.Read_GraphML('dj38.gml')
@@ -30,6 +32,7 @@ class Colony:
         self.evaporation_rate = evaporation_rate
         self.max_iterations = max_iterations
         # self.target = target
+        self.cost = [] # for plot
         self.ants = []
 
         initial_verttices = random.sample(range(self.g.vcount()-1),self.ant_number)
@@ -48,15 +51,15 @@ class Colony:
             ant.cost = 0.0
             del(ant.path[1:]) #deleting_path except the first element
 
-    def roulette(self,vet):
+    def roulette(self,prob_vet,edge_vet):
 
         x = random.random()
 
         y = 0
-        for i,j  in enumerate(sorted(vet,reverse = True)):
-            y += j
+        for i  in sorted(zip(prob_vet,edge_vet),key = lambda X : X[0] ,reverse = True):
+            y += i[0]
             if y >= x:
-                return i
+                return i[1]
 
 
     def spreading_pheromone(self):
@@ -72,13 +75,20 @@ class Colony:
         # for i in self.ants:
         #     print i.path,i.cost
         print 'menor caminho',self.ants[0].path,self.ants[0].cost
+        self.cost.append(self.ants[0].cost)
 
-        feromony = [1/float(i.cost) if float(i.cost) != 0 else 1 for i in self.ants]
+        # feromony = [1/float(i.cost) if float(i.cost) != 0 else 1 for i in self.ants]
 
-        for i,j in enumerate(self.ants):
-            path = self.g.get_eids( path = j.path, directed=False) # geting ids of edges that compose the path
-            for k in path:
-                self.g.es[k]['feromony'] += feromony[i]
+        # for i,j in enumerate(self.ants):
+        #     path = self.g.get_eids( path = j.path, directed=False) # geting ids of edges that compose the path
+        #     for k in path:
+        #         self.g.es[k]['feromony'] += feromony[i]
+
+        path = self.g.get_eids( path = self.ants[0].path, directed=False) # geting ids of edges that compose the path
+        for k in path:
+
+            self.g.es[k]['feromony'] += self.evaporation_rate * 3
+            # print 'feromony',k,self.g.es[k]['feromony']
 
         self.deleting_path()
 
@@ -101,9 +111,10 @@ class Colony:
                         prob_edge.append(p)
                         edge_vet.append(edge)
                     prob_edge = [k/sum(prob_edge) for k in prob_edge]
-                    edge_pos = self.roulette(prob_edge)
+                    edge_pos = self.roulette(prob_edge,edge_vet)
 
-                    e = self.g.es[edge_vet[edge_pos]]
+                    # print edge_pos,edge_vet, len(edge_vet)
+                    e = self.g.es[edge_pos]
 
                     vertex_chosen = e.target if e.target != ant.path[-1] else e.source
 
@@ -111,8 +122,13 @@ class Colony:
                     ant.path.append(vertex_chosen)
 
             self.spreading_pheromone()
-        
+
+        print len(self.cost)
+        plt.plot(self.cost)
+        plt.ylabel('Cost variation')
+        plt.show()
+
 
 if __name__ == '__main__' :
-    c = Colony(g,ant_number = 10,alpha = 0.8,beta = 0.2,evaporation_rate = 0.000002,max_iterations = 10)
-    print c.run()
+    c = Colony(g,ant_number = 10,alpha = 0.8,beta = 0.2,evaporation_rate = 0.02,max_iterations = 10)
+    c.run()
